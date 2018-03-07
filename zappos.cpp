@@ -21,7 +21,9 @@
 #include <algorithm>
 #include <unordered_map>
 
-void errorCode();
+using namespace std;
+
+bool errorCode(chef chefs, mealPerNight mealsPerNight, int K);
 
 // should probably make chef class
 class chef
@@ -31,8 +33,13 @@ class chef
         float Q; // chefs quality of each meal
         string Z; // chefs name
         string F; // chefs friend name
+        void getChefInfo();
     private:
 
+}
+
+void chef::getChefInfo(){
+  cin << Z << MPM << Q << F;
 }
 
 // class meals
@@ -42,7 +49,12 @@ class mealPerNight
       int M;    // number of meals
       float GQ; // goal quality
       int T;    // time allotted
+      void getMealsInfo();
   private:
+}
+
+void mealPerNight::getMealsInfo(){
+  cin << M << GQ << T;
 }
 
 using namespace std;
@@ -54,23 +66,53 @@ int main() {
     int N; // team members
 
     cin >> K;
-    if(K < || K > 100){errorCode(); return 0;}
-    N = K/2;
-      // might be super wrong and have to change this
-    chef chefs = (chef*) malloc (K);
-    mealPerNight mealsPerNight = (mealPerNight*) malloc (K-1);
+    if(K < || K > 100){errorCode();}
 
-    // ideally this gets you all the info
+
+    N = K/2;
+
+      // might be super wrong and have to change this
+    chef * chefs = new chef[K];
+    // chef chefs = (chef*) malloc (K);
+    mealPerNight * mealsPerNight = new mealPerNight[K-1];
+    // mealPerNight mealsPerNight = (mealPerNight*) malloc (K-1);
+
     for(int i = 0; i < K; i++){
-      cin << chefs[i].Z << chefs[i].MPM << chefs[i].Q << chefs[i].F;
+      chefs[i].getChefInfo();
     }
+
     for(int i = 0; i < K-1; i++){
-      cin << mealsPerNight[i].M << mealsPerNight[i].GQ << mealsPerNight[i].T;
+      mealsPerNight[i].getMealsInfo();
     }
+
+    if (errorCode(chefs, mealsPerNight, K)){delete[] chefs; delete[] mealsPerNight; return 0;}
+
+    // ok we here but how the fuck we pick teams
+    // ok if I'm reading this right we need to get both teams to get
+    //     their highest possible score it seems like we would prioritize
+    //     one team over another always and almost always have one winner
 
     return 0;
 }
 
-void errorCode(){
-    cout << "there was an error";
+bool errorCode(chef chefs, mealPerNight mealsPerNight, int K){
+
+    if(K < || K > 100){return true;}
+
+    for(int i = 0; i < K; i++){
+      if ((i != (K - 1)) && (mealsPerNight[i].M < 1 || mealsPerNight[i].M > 10000 ||
+          mealsPerNight[i].T < 1 || mealsPerNight[i].T > 10000 ||
+          mealsPerNight[i].GQ < 0.000 || mealsPerNight[i].GQ > 1.000) ){
+            cout << "there was an error" << endl;
+            return true;
+      }
+      if (chefs[i].MPM < 1 || chefs[i].MPM > 5 ||
+          chefs[i].Q < 0.000 ||  chefs[i].Q > 1.000 ||
+          chefs[i].F.length < 1 || chefs[i].Z.length < 1 || chefs[i].Z == chefs[i].F){
+             cout << "there was an error" << endl;
+             return true;
+          }
+    }
+
+    return false;
 }

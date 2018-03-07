@@ -27,12 +27,22 @@ void errorCode();
 class chef
 {
     public:
-        int MPM;
-        int Q;
-        string Z;
-        string F;
+        int MPM; // meals per minute
+        float Q; // chefs quality of each meal
+        string Z; // chefs name
+        string F; // chefs friend name
     private:
 
+}
+
+// class meals
+class mealPerNight
+{
+  public:
+      int M;    // number of meals
+      float GQ; // goal quality
+      int T;    // time allotted
+  private:
 }
 
 using namespace std;
@@ -44,8 +54,19 @@ int main() {
     int N; // team members
 
     cin >> K;
-    if(K < || K > 100){errorCode();}
-    chef chefs[];
+    if(K < || K > 100){errorCode(); return 0;}
+    N = K/2;
+      // might be super wrong and have to change this
+    chef chefs = (chef*) malloc (K);
+    mealPerNight mealsPerNight = (mealPerNight*) malloc (K-1);
+
+    // ideally this gets you all the info
+    for(int i = 0; i < K; i++){
+      cin << chefs[i].Z << chefs[i].MPM << chefs[i].Q << chefs[i].F;
+    }
+    for(int i = 0; i < K-1; i++){
+      cin << mealsPerNight[i].M << mealsPerNight[i].GQ << mealsPerNight[i].T;
+    }
 
     return 0;
 }
